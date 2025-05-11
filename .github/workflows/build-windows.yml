@@ -52,7 +52,6 @@ jobs:
             mingw-w64-x86_64-x264  
             mingw-w64-x86_64-x265  
             mingw-w64-x86_64-zimg  
-            # SWIG関連の依存関係  
             mingw-w64-x86_64-swig  
             mingw-w64-x86_64-python  
             mingw-w64-x86_64-ruby  
@@ -84,7 +83,6 @@ jobs:
           make -j$(nproc)  
           make install DESTDIR=$(pwd)/install  
             
-          # パッケージ化  
           cd install  
           tar -cJf ../mlt-windows-with-swig.txz .  
           cd ..  
