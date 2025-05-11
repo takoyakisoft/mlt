@@ -63,12 +63,7 @@ jobs:
         run: |  
           mkdir build  
           cd build  
-          cmake -G "MSYS Makefiles" \  
-            -DCMAKE_BUILD_TYPE=Release \  
-            -DSWIG_CSHARP=ON \  
-            -DSWIG_NODEJS=ON \  
-            -DSWIG_PYTHON=ON \  
-            ..  
+          cmake -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DSWIG_CSHARP=ON -DSWIG_NODEJS=ON -DSWIG_PYTHON=ON ..  
           make -j$(nproc)  
           make install DESTDIR=$(pwd)/install  
             
