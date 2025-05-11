@@ -1,101 +1,85 @@
-name: build-mlt-windows-with-swig
-
-on:
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: windows-latest
-
-    steps:
-      - name: Setup MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: MINGW64
-          update: true # This runs pacman -Sy followed by pacman -Su (if needed)
-          install: >-
-            autotools base-devel bzip2 coreutils git gzip tar xz zip
-            perl-List-MoreUtils perl-XML-Parser
-            mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-cmake
-            mingw-w64-x86_64-meson
-            mingw-w64-x86_64-nasm
-            mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-yasm
-            mingw-w64-x86_64-cairo
-            mingw-w64-x86_64-eigen3
-            mingw-w64-x86_64-dlfcn
-            mingw-w64-x86_64-fftw
-            mingw-w64-x86_64-gettext-tools
-            mingw-w64-x86_64-harfbuzz
-            mingw-w64-x86_64-lame
-            mingw-w64-x86_64-libarchive
-            mingw-w64-x86_64-libepoxy
-            mingw-w64-x86_64-libexif
-            mingw-w64-x86_64-libimagequant
-            mingw-w64-x86_64-libsamplerate
-            mingw-w64-x86_64-libtheora
-            mingw-w64-x86_64-libvorbis
-            mingw-w64-x86_64-libvpx
-            mingw-w64-x86_64-libwebp
-            mingw-w64-x86_64-libxml2
-            mingw-w64-x86_64-openblas
-            mingw-w64-x86_64-onevpl
-            mingw-w64-x86_64-openssl
-            mingw-w64-x86_64-opus
-            mingw-w64-x86_64-potrace
-            mingw-w64-x86_64-python-pip
-            mingw-w64-x86_64-rubberband
-            mingw-w64-x86_64-sox
-            mingw-w64-x86_64-svt-av1
-            mingw-w64-x86_64-vid.stab
-            mingw-w64-x86_64-x264
-            mingw-w64-x86_64-x265
-            mingw-w64-x86_64-zimg
-            mingw-w64-x86_64-swig
-            mingw-w64-x86_64-python
-            mingw-w64-x86_64-ruby
-            mingw-w64-x86_64-lua
-            mingw-w64-x86_64-perl
-            mingw-w64-x86_64-tcl
-            mingw-w64-x86_64-nodejs
-            # mingw-w64-x86_64-php # Install separately
-
-      - name: Force update databases and install PHP
-        shell: msys2 {0}
-        run: |
-          pacman -Syyu --noconfirm
-          pacman -S --noconfirm --needed mingw-w64-x86_64-php
-
-      - uses: actions/checkout@v4
-
-      - name: Build MLT with all SWIG bindings
-        shell: msys2 {0}
-        run: |
-          mkdir build
-          cd build
-          cmake -G "MSYS Makefiles" \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DSWIG_CSHARP=ON \
-            -DSWIG_JAVA=ON \
-            -DSWIG_LUA=ON \
-            -DSWIG_NODEJS=ON \
-            -DSWIG_PERL=ON \
-            -DSWIG_PHP=ON \
-            -DSWIG_PYTHON=ON \
-            -DSWIG_RUBY=ON \
-            -DSWIG_TCL=ON \
-            ..
-          make -j$(nproc)
-          make install DESTDIR=$(pwd)/install
-
-          cd install
-          tar -cJf ../mlt-windows-with-swig.txz .
-          cd ..
-          echo "ビルド完了"
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: mlt-windows-with-swig
+name: build-mlt-windows-with-swig  
+  
+on:  
+  workflow_dispatch:  
+  
+jobs:  
+  build:  
+    runs-on: windows-latest  
+  
+    steps:  
+      - name: Setup MSYS2  
+        uses: msys2/setup-msys2@v2  
+        with:  
+          msystem: MINGW64  
+          update: true  
+          install: >-  
+            autotools base-devel bzip2 coreutils git gzip tar xz zip  
+            perl-List-MoreUtils perl-XML-Parser  
+            mingw-w64-x86_64-toolchain  
+            mingw-w64-x86_64-cmake  
+            mingw-w64-x86_64-meson  
+            mingw-w64-x86_64-nasm  
+            mingw-w64-x86_64-ninja  
+            mingw-w64-x86_64-yasm  
+            mingw-w64-x86_64-cairo  
+            mingw-w64-x86_64-eigen3  
+            mingw-w64-x86_64-dlfcn  
+            mingw-w64-x86_64-fftw  
+            mingw-w64-x86_64-gettext-tools  
+            mingw-w64-x86_64-harfbuzz  
+            mingw-w64-x86_64-lame  
+            mingw-w64-x86_64-libarchive  
+            mingw-w64-x86_64-libepoxy  
+            mingw-w64-x86_64-libexif  
+            mingw-w64-x86_64-libimagequant  
+            mingw-w64-x86_64-libsamplerate  
+            mingw-w64-x86_64-libtheora  
+            mingw-w64-x86_64-libvorbis  
+            mingw-w64-x86_64-libvpx  
+            mingw-w64-x86_64-libwebp  
+            mingw-w64-x86_64-libxml2  
+            mingw-w64-x86_64-openblas  
+            mingw-w64-x86_64-onevpl  
+            mingw-w64-x86_64-openssl  
+            mingw-w64-x86_64-opus  
+            mingw-w64-x86_64-potrace  
+            mingw-w64-x86_64-python-pip  
+            mingw-w64-x86_64-rubberband  
+            mingw-w64-x86_64-sox  
+            mingw-w64-x86_64-svt-av1  
+            mingw-w64-x86_64-vid.stab  
+            mingw-w64-x86_64-x264  
+            mingw-w64-x86_64-x265  
+            mingw-w64-x86_64-zimg  
+            mingw-w64-x86_64-swig  
+            mingw-w64-x86_64-python  
+            mingw-w64-x86_64-nodejs  
+  
+      - uses: actions/checkout@v4  
+  
+      - name: Build MLT with all SWIG bindings  
+        shell: msys2 {0}  
+        run: |  
+          mkdir build  
+          cd build  
+          cmake -G "MSYS Makefiles" \  
+            -DCMAKE_BUILD_TYPE=Release \  
+            -DSWIG_CSHARP=ON \  
+            -DSWIG_NODEJS=ON \  
+            -DSWIG_PYTHON=ON \  
+            ..  
+          make -j$(nproc)  
+          make install DESTDIR=$(pwd)/install  
+            
+          # パッケージ化  
+          cd install  
+          tar -cJf ../mlt-windows-with-swig.txz .  
+          cd ..  
+          echo "ビルド完了"  
+  
+      - name: Upload artifact  
+        uses: actions/upload-artifact@v4  
+        with:  
+          name: mlt-windows-with-swig  
           path: ./build/mlt-windows-with-swig.txz
