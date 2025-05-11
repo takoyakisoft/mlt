@@ -53,6 +53,7 @@ jobs:
             mingw-w64-x86_64-x265  
             mingw-w64-x86_64-zimg  
             mingw-w64-x86_64-swig  
+            mingw-w64-x86_64-mono  
             mingw-w64-x86_64-python  
             mingw-w64-x86_64-nodejs  
   
